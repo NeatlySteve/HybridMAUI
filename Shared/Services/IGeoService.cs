@@ -8,7 +8,7 @@ namespace SharedResources.Services
 {
 	public interface IGeoService
 	{
-		Task<Position> GetPosition();
+		Task<Position?> GetPosition();
 	}
 
 	public class Position

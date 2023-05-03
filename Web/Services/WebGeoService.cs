@@ -12,7 +12,7 @@ namespace Web.Services
 			this.jSRuntime = jSRuntime;
 		}
 
-		public async Task<Position> GetPosition()
+		public async Task<Position?> GetPosition()
 		{
 			var service = new GeolocationService(jSRuntime);
 			var result = await service.GetCurrentPosition();
