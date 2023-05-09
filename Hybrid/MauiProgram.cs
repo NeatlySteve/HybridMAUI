@@ -28,6 +28,7 @@ public static class MauiProgram
 		//Our services.
 		builder.Services.AddSingleton<SharedResources.Services.IDataService, SharedResources.Services.DataService>();
 		builder.Services.AddSingleton<SharedResources.Services.IGeoService, Hybrid.Services.AppGeoService>();
+		builder.Services.AddSingleton<SharedResources.Services.IAuthService, SharedResources.Services.AuthService>();
 
 		return builder.Build();
 	}

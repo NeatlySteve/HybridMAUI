@@ -16,6 +16,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<SharedResources.Services.IDataService, SharedResources.Services.DataService>();
 builder.Services.AddScoped<IGeoService, WebGeoService>();
 builder.Services.AddScoped<IGeolocationService, GeolocationService>();
+builder.Services.AddSingleton<SharedResources.Services.IAuthService, SharedResources.Services.AuthService>();
 
 var app = builder.Build();
 

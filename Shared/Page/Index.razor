@@ -1,17 +1,44 @@
 ﻿@inject IDataService dataService
 @inject IGeoService geoService
+@inject IAuthService authService
 @page "/"
 
 <span>My position is: @Latitude, @Longitude</span>
 
 <h3>Kentucky State Parks</h3>
-@foreach(var item in Data)
+
+@if (Authenticated == false)
 {
-	<span>@item</span><br />
+	<form method="post" @onsubmit="Authenticate">
+		<div>
+			<label for="Username">Username:</label>
+			<input type="text" id="Username" name="Username" @bind="@Username" required />
+		</div>
+		<div>
+			<label for="Password">Password:</label>
+			<input type="password" id="Password" name="Password" @bind="@Password" required />
+		</div>
+		<div>
+			<button type="submit">Login</button> <button type="submit" @onclick="ToRegister">Register</button>
+		</div>
+	</form>
+}
+
+@if (Authenticated)
+{
+	@foreach (var item in Data)
+	{
+		<span>@item</span><br />
+	}
 }
 
 @code {
 	private List<string> Data { get; set; } = new List<string>();
+	private bool Authenticated = false;
+
+	public string Username = "Username";
+	public string Password = "Password";
+	public bool Register = false;
 
 	private string? Latitude { get; set; }
 	private string? Longitude { get; set; }
@@ -38,6 +65,34 @@
 		var result = await dataService.GetData();
 
 		Data = result;
+
+	}
+
+	protected void ToRegister()
+	{
+		Register = true;
+	}
+
+	protected void Authenticate()
+	{
+		if (Register)
+		{
+			authService.RegisterUser(Username, Password);
+			Register = false;
+		}
+
+		if (authService.GetAuthenticated())
+		{
+			Authenticated = true;
+		}
+		else if(authService.GetAuthenticated(Username, Password))
+		{
+			Authenticated = true;
+		}
+		else
+		{
+			Authenticated = false;
+		}
 	}
 
 }
