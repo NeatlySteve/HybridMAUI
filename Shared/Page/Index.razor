@@ -1,11 +1,13 @@
 ﻿@inject IDataService dataService
 @inject IGeoService geoService
 @inject IAuthService authService
+@using static SharedResources.Common.DNASequence;
 @page "/"
 
+<h4>Position</h4>
 <span>My position is: @Latitude, @Longitude</span>
 
-<h3>Kentucky State Parks</h3>
+
 
 @if (Authenticated == false)
 {
@@ -38,24 +40,52 @@
 
 @if (Authenticated)
 {
+	<h4>Data Service Example</h4><br />
+	<h5>Kentucky State Parks</h5>
+	<span>------------------------------------</span>
+	<br />
 	@foreach (var item in Data)
 	{
 		<span>@item</span><br />
 	}
+	<span>------------------------------------</span>
+	<br />
+	<br />
+
+	<form method="post" @onsubmit="DNAConversion">
+		<div>
+			<label>Text to convert to DNA:</label><br />
+			<textarea contenteditable="true" @bind="@TextToConvert"></textarea>
+		</div>
+		<div>
+			<label>DNA Sequence:</label><br />
+			<textarea wrap="soft" contenteditable="false" @bind="@ConvertedText"></textarea>
+		</div>
+		<div>
+			<button type="submit">Process</button>
+			<button type="submit" @onclick="SaveConverted">Save to a File</button>
+		</div>
+	</form>
 }
 
 @code {
 	private List<string> Data { get; set; } = new List<string>();
+
+	//Login
 	private bool Authenticated = false;
 	private bool WarnCreds = false;
 	public bool Registered = false;
-
 	public string Username = "Username";
 	public string Password = "Password";
 	public bool Register = false;
 
+	//Location
 	private string? Latitude { get; set; }
 	private string? Longitude { get; set; }
+
+	//DNA
+	public string TextToConvert = "";
+	public string ConvertedText = "";
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
@@ -64,8 +94,8 @@
 		if (!firstRender)
 			return;
 
+		//Location
 		var position = await geoService.GetPosition();
-
 		Latitude = position?.Latitude.ToString() ?? String.Empty;
 		Longitude = position?.Longitude.ToString() ?? String.Empty;
 
@@ -76,11 +106,13 @@
 	{
 		await base.OnInitializedAsync();
 
+		//Data
 		var result = await dataService.GetData();
-
 		Data = result;
 
 	}
+
+	#region Login Functions
 
 	protected void ToRegister()
 	{
@@ -111,5 +143,17 @@
 			WarnCreds = true;
 		}
 	}
+	#endregion
 
+	#region DNA
+	protected void DNAConversion()
+	{
+		ConvertedText = ConvertStringToGeneticSequence(TextToConvert);
+	}
+
+	protected void SaveConverted()
+	{
+		
+	}
+	#endregion
 }
