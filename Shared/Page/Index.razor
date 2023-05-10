@@ -21,6 +21,18 @@
 		<div>
 			<button type="submit">Login</button> <button type="submit" @onclick="ToRegister">Register</button>
 		</div>
+		@if (WarnCreds == true)
+		{
+			<div>
+				<label>Incorrect Credentials</label>
+			</div>
+		}
+		@if (Registered == true)
+		{
+			<div>
+				<label>Registered</label>
+			</div>
+		}
 	</form>
 }
 
@@ -35,6 +47,8 @@
 @code {
 	private List<string> Data { get; set; } = new List<string>();
 	private bool Authenticated = false;
+	private bool WarnCreds = false;
+	public bool Registered = false;
 
 	public string Username = "Username";
 	public string Password = "Password";
@@ -75,10 +89,12 @@
 
 	protected void Authenticate()
 	{
+		WarnCreds = false;
 		if (Register)
 		{
 			authService.RegisterUser(Username, Password);
 			Register = false;
+			Registered = true;
 		}
 
 		if (authService.GetAuthenticated())
@@ -92,6 +108,7 @@
 		else
 		{
 			Authenticated = false;
+			WarnCreds = true;
 		}
 	}
 

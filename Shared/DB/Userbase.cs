@@ -42,7 +42,7 @@ namespace SharedResources.DB
 			return ReadFromFile();
 		}
 
-		const string FileLocation = "C:\\Users\\smillbourn\\source\\repos\\HybridMAUI\\Shared\\DB\\userpass.txt";
+		const string FileLocation = "C:\\Users\\Steve\\Source\\Repos\\HybridMAUI\\Shared\\DB\\userpass.txt";
 
 		public class EncryptedUser
 		{
